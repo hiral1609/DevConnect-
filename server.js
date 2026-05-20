@@ -1,46 +1,41 @@
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
-
-// Import database connection function
+const fs = require('fs');
 const connectDB = require('./config/db');
 
-// Import our routes (API endpoints)
+// Ensure uploads directory exists
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
+
+// Import routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
 
-// Create the express app
 const app = express();
 
-// Connect to MongoDB Database
+// Connect to Database
 connectDB();
 
-// Setup Middleware
-app.use(cors()); // Allow requests from frontend
-app.use(express.json()); // Allow sending JSON data in request body
-app.use(express.urlencoded({ extended: true })); // Allow form data
-
-// Serve static files (like CSS, JS, Images) from the 'public' folder
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // for uploaded images
 
-// Serve the 'uploads' folder so images/videos can be viewed in the browser
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// ----------------------------------------------------
-// API ROUTES (Backend Logic)
-// ----------------------------------------------------
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 
-// ----------------------------------------------------
-// FRONTEND ROUTES (HTML Pages)
-// ----------------------------------------------------
-const viewPath = path.join(__dirname, 'views'); // Path to our HTML files
-
+// View Routes (HTML pages)
+const viewPath = path.join(__dirname, 'views');
 app.get('/', (req, res) => res.sendFile('login.html', { root: viewPath }));
 app.get('/register', (req, res) => res.sendFile('register.html', { root: viewPath }));
 app.get('/home', (req, res) => res.sendFile('home.html', { root: viewPath }));
@@ -48,8 +43,7 @@ app.get('/feed', (req, res) => res.sendFile('feed.html', { root: viewPath }));
 app.get('/profile', (req, res) => res.sendFile('profile.html', { root: viewPath }));
 app.get('/search', (req, res) => res.sendFile('search.html', { root: viewPath }));
 
-// Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is successfully running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });

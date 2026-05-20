@@ -104,6 +104,16 @@ const deleteProfile = async (req, res) => {
         // Optional: Remove all posts created by the user
         await require('../models/Post').deleteMany({ userId: userId });
         
+        // Remove this user from others' followers and following lists
+        await User.updateMany(
+            { followers: userId },
+            { $pull: { followers: userId } }
+        );
+        await User.updateMany(
+            { following: userId },
+            { $pull: { following: userId } }
+        );
+        
         // Delete the user
         await User.findByIdAndDelete(userId);
         

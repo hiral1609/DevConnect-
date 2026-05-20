@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - DevConnect</title>
+    <meta name="description" content="Search developers on DevConnect">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="app-body">
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">DevConnect</a>
+            <div class="nav-links">
+                <a href="/home">Home</a>
+                <a href="/feed">Feed</a>
+                <a href="/search" class="active">Search</a>
+                <a href="/profile">Profile</a>
+                <button id="logoutBtn" class="btn btn-outline">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="search-section glassmorphism">
+            <input type="text" id="searchInput" placeholder="Search developers by username or skills..." class="search-input">
+        </div>
+
+        <div id="searchResults" class="search-results-grid">
+            <!-- Results will be displayed here -->
+        </div>
+    </main>
+
+    <script src="/js/main.js"></script>
+    <script>
+        checkAuth();
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+
+        let searchTimeout;
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value;
+            
+            searchTimeout = setTimeout(() => {
+                if (query.trim().length > 0) {
+                    performSearch(query);
+                } else {
+                    document.getElementById('searchResults').innerHTML = '';
+                }
+            }, 300);
+        });
+
+        async function performSearch(query) {
+            try {
+                const results = await apiCall(`/api/users/search?q=${encodeURIComponent(query)}`);
+                const container = document.getElementById('searchResults');
+                container.innerHTML = '';
+
+                if (results.length === 0) {
+                    container.innerHTML = '<p class="no-results">No developers found.</p>';
+                    return;
+                }
+
+                results.forEach(user => {
+                    const card = document.createElement('div');
+                    card.className = 'user-card glassmorphism fade-in';
+                    card.innerHTML = `
+                        <img src="${user.profilePic || '/images/default-avatar.svg'}" alt="Profile" class="avatar-lg">
+                        <h3>${user.username}</h3>
+                        <p class="bio-short">${user.bio || 'No bio'}</p>
+                        <div class="skills-list small">
+                            ${user.skills.slice(0,3).map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                            ${user.skills.length > 3 ? '<span>...</span>' : ''}
+                        </div>
+                        <a href="/profile?id=${user._id}" class="btn btn-primary btn-sm mt-10">View Profile</a>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Search error:', error);
+            }
+        }
+        
+        // Initial empty search to show all users (removed as requested)
+        // performSearch('');
+    </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - DevConnect</title>
+    <meta name="description" content="Welcome to DevConnect">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #58a6ff, #2ea043);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 20px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .feature-card {
+            padding: 30px;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        .feature-card p {
+            color: var(--text-muted);
+        }
+        .hero-img {
+            max-width: 100%;
+            border-radius: 12px;
+            margin-top: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body class="app-body">
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">DevConnect</a>
+            <div class="nav-links">
+                <a href="/home" class="active">Home</a>
+                <a href="/feed">Feed</a>
+                <a href="/search">Search</a>
+                <a href="/profile">Profile</a>
+                <button id="logoutBtn" class="btn btn-outline">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="hero glassmorphism fade-in">
+            <h1>Welcome to DevConnect</h1>
+            <p>The ultimate platform for developers to share knowledge, showcase skills, upload videos, and build meaningful connections.</p>
+            <a href="/feed" class="btn btn-primary" style="font-size: 18px; padding: 12px 30px;">Go to Feed</a>
+            
+            <div class="features">
+                <div class="feature-card glassmorphism">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Share Your Work</h3>
+                    <p>Post updates, share images, and upload videos of your latest projects with the community.</p>
+                </div>
+                <div class="feature-card glassmorphism">
+                    <div class="feature-icon">🤝</div>
+                    <h3>Connect</h3>
+                    <p>Follow top developers, search for users by specific skills, and expand your network.</p>
+                </div>
+                <div class="feature-card glassmorphism">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Build Profile</h3>
+                    <p>Customize your profile, add your skills, and let others discover your expertise.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/main.js"></script>
+    <script>
+        checkAuth();
+        document.getElementById('logoutBtn').addEventListener('click', logout);
+    </script>
+</body>
+</html>

@@ -26,4 +26,4 @@ my full stack project for developer networking. built with node, express, mongod
 6. open localhost:3000
 
 ---
-made by Hiral
+made by Hiral Shah
